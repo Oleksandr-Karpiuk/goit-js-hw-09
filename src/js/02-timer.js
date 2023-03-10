@@ -55,19 +55,13 @@ function onBtnClick() {
 }
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
-
-  // Remaining days
   const days = pad(Math.floor(ms / day));
-  // Remaining hours
   const hours = pad(Math.floor((ms % day) / hour));
-  // Remaining minutes
   const minutes = pad(Math.floor(((ms % day) % hour) / minute));
-  // Remaining seconds
   const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
@@ -79,9 +73,9 @@ function pad(value) {
 
 function updateClockface({ days, hours, minutes, seconds }) {
   if (seconds >= 0) {
-    refs.days.textContent = `${days}`;
-    refs.hours.textContent = `${hours}`;
-    refs.min.textContent = `${minutes}`;
-    refs.sec.textContent = `${seconds}`;
+    refs.days.textContent = days;
+    refs.hours.textContent = hours;
+    refs.min.textContent = minutes;
+    refs.sec.textContent = seconds;
   }
 }
