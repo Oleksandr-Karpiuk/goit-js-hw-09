@@ -40,11 +40,13 @@ function onBtnClick() {
 
   timerId = setInterval(() => {
     refs.btnStart.disabled = true;
+    refs.input.disabled = true;
     const dateNow = Date.now();
     const deltaTime = dateSet - dateNow;
     const { days, hours, minutes, seconds } = convertMs(deltaTime);
     if (deltaTime < 1000) {
       refs.btnStart.disabled = false;
+      refs.input.disabled = false;
       clearInterval(timerId);
       Notiflix.Report.warning('Attention!', 'Please choose a new date', 'Ok');
     }
@@ -76,8 +78,10 @@ function pad(value) {
 }
 
 function updateClockface({ days, hours, minutes, seconds }) {
-  refs.days.textContent = `${days}`;
-  refs.hours.textContent = `${hours}`;
-  refs.min.textContent = `${minutes}`;
-  refs.sec.textContent = `${seconds}`;
+  if (seconds >= 0) {
+    refs.days.textContent = `${days}`;
+    refs.hours.textContent = `${hours}`;
+    refs.min.textContent = `${minutes}`;
+    refs.sec.textContent = `${seconds}`;
+  }
 }
