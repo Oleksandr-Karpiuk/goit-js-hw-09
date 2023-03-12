@@ -36,21 +36,29 @@ refs.btnStart.disabled = true;
 refs.btnStart.addEventListener('click', onBtnClick);
 
 function onBtnClick() {
+  refs.btnStart.disabled = true;
+  refs.input.disabled = true;
+
   const dateSet = new Date(refs.input.value);
+  const dateNow = Date.now();
+  const deltaTime = dateSet - dateNow;
+  const { days, hours, minutes, seconds } = convertMs(deltaTime);
+
+  updateClockface({ days, hours, minutes, seconds });
 
   timerId = setInterval(() => {
-    refs.btnStart.disabled = true;
-    refs.input.disabled = true;
     const dateNow = Date.now();
     const deltaTime = dateSet - dateNow;
     const { days, hours, minutes, seconds } = convertMs(deltaTime);
+
+    updateClockface({ days, hours, minutes, seconds });
+
     if (deltaTime < 1000) {
       refs.btnStart.disabled = false;
       refs.input.disabled = false;
       clearInterval(timerId);
       Notiflix.Report.warning('Attention!', 'Please choose a new date', 'Ok');
     }
-    updateClockface({ days, hours, minutes, seconds });
   }, 1000);
 }
 
