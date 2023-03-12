@@ -1,47 +1,49 @@
-// HomeWork
-// 1. Добавити розмітку
-// 2. Добавити 'submit' addEventListener на форму
-// 3. Зловити  в події данні з форми - 'delay', 'step', 'amount'
-// 4. Використати 'amount' як кількість запуску функції 'createPromise'
-// 5. Викликати createPromise(position, delay) n разів
-// і використати index як 'position' і delay =  (delay + step * index) із форми
-//
+import Notiflix from 'notiflix';
+Notiflix.Notify.init({
+  position: 'center-top',
+  timeout: 5000,
+});
 
-// document.querySelector('.form').addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   const { delay, step, amount } = e.currentTarget.elements;
-//   const delayValue = parseInt(delay.value);
-//   const stepValue = parseInt(step.value);
-//   const amountValue = parseInt(amount.value);
+document.querySelector('.form').addEventListener('submit', e => {
+  e.preventDefault();
 
-//   const promises = [];
+  const { delay, step, amount } = e.currentTarget.elements;
+  const delayValue = parseInt(delay.value);
+  const stepValue = parseInt(step.value);
+  const amountValue = parseInt(amount.value);
 
-//   for (let index = 0; index < amountValue; index++) {
-//     const delay = index * stepValue + delayValue;
-//     // викликати 'createPromise'
-//   }
+  for (let index = 0; index < amountValue; index += 1) {
+    if (delayValue < 0 || stepValue < 0) {
+      e.currentTarget.reset();
+      Notiflix.Notify.failure('Введіть коректні дані');
+      return;
+    }
 
-//   e.currentTarget.reset();
-// });
-
-// function createPromise(position, delay) {
-//   return new Promise((resolve, reject) => {
-//     const shouldResolve = Math.random() > 0.3;
-//     setTimeout(() => {
-//       if (shouldResolve) {
-//         resolve({ position, delay });
-//       } else {
-//         reject({ position, delay });
-//       }
-//     }, delay);
-//   });
-// }
+    const delay = index * stepValue + delayValue;
+    createPromise(index, delay)
+      .then(({ position, delay }) =>
+        Notiflix.Notify.success(
+          `Fulfilled promise ${position + 1} in ${delay}ms`
+        )
+      )
+      .catch(({ position, delay }) =>
+        Notiflix.Notify.failure(
+          `Rejected promise ${position + 1} in ${delay}ms`
+        )
+      );
+    e.currentTarget.reset();
+  }
+});
 
 function createPromise(position, delay) {
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-  } else {
-    // Reject
-  }
+  return new Promise((resolve, reject) => {
+    const shouldResolve = Math.random() > 0.3;
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
 }
